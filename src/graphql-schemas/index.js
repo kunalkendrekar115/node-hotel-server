@@ -4,9 +4,16 @@ const { HotelModal } = require("../db")
 const { HotelInputITC, ReviewInputITC, HotelTC } = require("./hotel-schema")
 
 schemaComposer.Query.addFields({
-  Hotels: {
+  hotels: {
     type: [HotelTC],
     resolve: () => HotelModal.find({})
+  },
+  hotel: {
+    type: HotelTC,
+    args: {
+      _id: "String"
+    },
+    resolve: (_, { _id }) => HotelModal.findOne({ _id })
   }
 })
 
@@ -22,12 +29,12 @@ schemaComposer.Mutation.addFields({
   addReview: {
     type: "Int",
     args: {
-      id: "String",
+      _id: "String",
       review: ReviewInputITC
     },
-    resolve: async (_, { id, review }) => {
+    resolve: async (_, { _id, review }) => {
       const res = await HotelModal.updateOne(
-        { _id: id },
+        { _id },
         { $push: { reviews: review } }
       )
       return res.nModified
