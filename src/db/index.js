@@ -1,4 +1,4 @@
-const connectToDatabase = require("./connections");
-const BlogModal = require("./schemas");
+const connectToDatabase = require("./connections")
+const HotelModal = require("./schemas")
 
-module.exports = { connectToDatabase, BlogModal };
+module.exports = { connectToDatabase, HotelModal }

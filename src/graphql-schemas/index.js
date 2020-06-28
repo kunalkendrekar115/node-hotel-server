@@ -1,77 +1,38 @@
-const { schemaComposer, toInputObjectType } = require("graphql-compose");
+const { schemaComposer } = require("graphql-compose")
+const { HotelModal } = require("../db")
 
-const { BlogModal } = require("../db");
-
-const CommentsTC = schemaComposer.createObjectTC({
-  name: "Comment",
-  fields: {
-    body: "String",
-    date: "Date",
-  },
-  resolve: (parant) => {},
-});
-
-const InputTC = schemaComposer.createObjectTC({
-  name: "Blog",
-  fields: {
-    _id: "String",
-    title: "String!",
-    author: "String",
-    body: "String",
-  },
-});
-
-const InputITC = toInputObjectType(InputTC);
-
-const BolgTC = schemaComposer.createObjectTC({
-  id: "String",
-  name: "Blog",
-  fields: {
-    title: "String",
-    author: "String",
-    body: "String",
-    comments: [CommentsTC],
-    date: "Date",
-  },
-});
+const { HotelInputITC, ReviewInputITC, HotelTC } = require("./hotel-schema")
 
 schemaComposer.Query.addFields({
-  Blogs: {
-    type: "[Blog]",
-    resolve: () => {},
-  },
-});
+  Hotels: {
+    type: [HotelTC],
+    resolve: () => HotelModal.find({})
+  }
+})
 
 schemaComposer.Mutation.addFields({
-  addBlog: {
-    type: "Blog",
+  createHotel: {
+    type: HotelTC,
     args: {
-      blog: InputITC,
+      hotel: HotelInputITC
     },
-    resolve: (_, { blog }) => {
-      return new BlogModal({ ...blog, comments: [] }).save();
-    },
+    resolve: (_, { hotel }) => HotelModal({ ...hotel, review: [] }).save()
   },
 
-  addComment: {
+  addReview: {
     type: "Int",
     args: {
       id: "String",
-      body: "String",
+      review: ReviewInputITC
     },
-    resolve: (_, { id, body }) => {
-      return new Promise((resolve, reject) => {
-        BlogModal.updateOne(
-          { _id: id },
-          { $push: { comments: { body } } },
-          (err, res) => {
-            console.log(res);
-            if (err) reject(err);
-            else resolve(res.nModified);
-          }
-        );
-      });
-    },
-  },
-});
-module.exports = schemaComposer.buildSchema();
+    resolve: async (_, { id, review }) => {
+      const res = await HotelModal.updateOne(
+        { _id: id },
+        { $push: { reviews: review } }
+      )
+      return res.nModified
+    }
+  }
+})
+
+module.exports = schemaComposer.buildSchema()
