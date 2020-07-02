@@ -3,6 +3,7 @@ const { schemaComposer, toInputObjectType } = require("graphql-compose")
 const ReviewTC = schemaComposer.createObjectTC({
   name: "Review",
   fields: {
+    _id: "String",
     reviewerName: "String",
     rating: "Float",
     comments: "String"
@@ -12,11 +13,8 @@ const ReviewTC = schemaComposer.createObjectTC({
 const RoomTypsETC = schemaComposer.createEnumTC({
   name: "StatusEnum",
   values: {
-    DELUX: { value: "Delux" },
-    SINGLE: { value: "Single" },
-    DECLINED: { value: "Executive" },
-    PREMIUM: { value: "Premium" },
-    DOUBLE: { value: "Double" }
+    Delux: { value: "Delux" },
+    Single: { value: "Single" }
   }
 })
 
@@ -30,17 +28,18 @@ const TariffTC = schemaComposer.createObjectTC({
 
 const hotelFields = {
   hotelName: "String",
-  fullAddress: "String",
+  hotelAddress: "String",
   rating: "Int",
+  amenities: ["String"],
   contactPhone: "Float",
   contactEmail: "String",
   country: "String",
-  pinCode: "Int",
+  pincode: "Int",
   checkInTime: "String",
   checkOutTime: "String",
   latitude: "Float",
   longitude: "Float",
-  tariff: [TariffTC]
+  tariffs: [TariffTC]
 }
 
 const HotelTC = schemaComposer.createObjectTC({

@@ -1,11 +1,24 @@
 const express = require("express")
+const cors = require("cors")
+
 const graphqlHTTP = require("express-graphql")
-const db = require("./db")
 const schema = require("./graphql-schemas")
+
+const db = require("./db")
 
 db.connectToDatabase()
 
+const corsOptions = {
+  credentials: true,
+  origin: (origin, callback) => callback(null, origin)
+}
+
 const app = express()
+
+app.use(cors(corsOptions))
+
+app.options("/graphql", cors())
+
 app.use(
   "/graphql",
   graphqlHTTP({

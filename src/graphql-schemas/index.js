@@ -1,7 +1,12 @@
 const { schemaComposer } = require("graphql-compose")
 const { HotelModal } = require("../db")
 
-const { HotelInputITC, ReviewInputITC, HotelTC } = require("./hotel-schema")
+const {
+  HotelInputITC,
+  ReviewInputITC,
+  HotelTC,
+  ReviewTC
+} = require("./hotel-schema")
 
 schemaComposer.Query.addFields({
   hotels: {
@@ -27,17 +32,22 @@ schemaComposer.Mutation.addFields({
   },
 
   addReview: {
-    type: "Int",
+    type: HotelTC,
     args: {
       _id: "String",
       review: ReviewInputITC
     },
     resolve: async (_, { _id, review }) => {
-      const res = await HotelModal.updateOne(
-        { _id },
-        { $push: { reviews: review } }
-      )
-      return res.nModified
+      try {
+        const res = await HotelModal.findOneAndUpdate(
+          { _id },
+          { $push: { reviews: { $each: [review], $position: 0 } } },
+          { new: true }
+        )
+        return res
+      } catch (error) {
+        return error
+      }
     }
   }
 })

@@ -3,15 +3,16 @@ const Schema = mongoose.Schema
 
 const hotelSchema = new Schema({
   hotelName: String,
-  fullAddress: String,
+  hotelAddress: String,
   rating: { type: Number, min: 1, max: 5 },
   contactPhone: Number,
   contactEmail: String,
   country: String,
-  pinCode: Number,
+  pincode: Number,
   checkInTime: String,
   checkOutTime: String,
-  tariff: [
+  amenities: [{ type: String }],
+  tariffs: [
     {
       roomType: {
         type: String,
@@ -22,11 +23,6 @@ const hotelSchema = new Schema({
   ],
   latitude: Number,
   longitude: Number,
-  hasWifi: Boolean,
-  hasRoomService: Boolean,
-  hasLaundry: Boolean,
-  hasLocker: Boolean,
-
   reviews: [
     {
       reviewerName: String,
