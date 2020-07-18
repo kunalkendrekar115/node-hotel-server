@@ -24,10 +24,10 @@ schemaComposer.Query.addFields({
   reviews: {
     type: [ReviewTC],
     args: {
-      _id: "String",
+      hotelId: "String",
     },
-    resolve: async (_, { _id }) => {
-      const { reviews } = await HotelModal.findOne({ _id });
+    resolve: async (_, { hotelId }) => {
+      const { reviews } = await HotelModal.findOne({ _id: hotelId });
       return reviews;
     },
   },
