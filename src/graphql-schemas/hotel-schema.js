@@ -14,7 +14,9 @@ const RoomTypsETC = schemaComposer.createEnumTC({
   name: "StatusEnum",
   values: {
     Delux: { value: "Delux" },
-    Single: { value: "Single" }
+    Single: { value: "Single" },
+    Double: { value: "Double" },
+    Executive: { value: "Executive" }
   }
 })
 
